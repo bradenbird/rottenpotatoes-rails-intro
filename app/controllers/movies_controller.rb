@@ -16,6 +16,7 @@ class MoviesController < ApplicationController
       @sort_column = params[:sort_column]
     else
       @movies = Movie.all
+    @all_ratings = Movie.all_ratings.sort #Change to what is in Movie.all
     end
   end
 
