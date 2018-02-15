@@ -11,6 +11,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params[:ratings].present?
+      @current_ratings = params[:ratings].keys
+    else
+      @current_ratings = Movie.all_ratings
+    end
+
     if params[:sort_column].present?
       @movies = Movie.all.order(params[:sort_column])
       @sort_column = params[:sort_column]
@@ -19,7 +25,7 @@ class MoviesController < ApplicationController
     end
 
     @all_ratings = Movie.all_ratings.sort #Change to what is in Movie.all
-    
+
   end
 
   def new
