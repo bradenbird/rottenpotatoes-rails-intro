@@ -18,10 +18,10 @@ class MoviesController < ApplicationController
     end
 
     if params[:sort_column].present?
-      @movies = Movie.all.order(params[:sort_column])
+      @movies = Movie.where(rating: @current_ratings).order(params[:sort_column])
       @sort_column = params[:sort_column]
     else
-      @movies = Movie.all
+      @movies = Movie.where(rating: @current_ratings)
     end
 
     @all_ratings = Movie.all_ratings.sort #Change to what is in Movie.all
