@@ -11,11 +11,14 @@ class MoviesController < ApplicationController
   end
 
   def index
+    update_uri = false
     if params[:ratings].present?
       @current_ratings = params[:ratings].keys
-      session[:ratings] = @current_ratings
+      session[:ratings] = params[:ratings]
     elsif session[:ratings].present?
       @current_ratings = session[:ratings]
+      update_uri = true
+      params[:ratings] = session[:ratings]
     else
       @current_ratings = Movie.all_ratings
     end
@@ -23,15 +26,22 @@ class MoviesController < ApplicationController
     if params[:sort_column].present?
       @movies = Movie.where(rating: @current_ratings).order(params[:sort_column])
       @sort_column = params[:sort_column]
-      session[:sort_column] = @sort_column
+      session[:sort_column] = params[:sort_column]
     elsif session[:sort_column].present?
       @movies = Movie.where(rating: @current_ratings).order(session[:sort_column])
-      @sort_column = session[:sort_column]      
+      @sort_column = session[:sort_column]
+      update_uri = true
+      params[:sort_column] = session[:sort_column]
     else
       @movies = Movie.where(rating: @current_ratings)
     end
 
     @all_ratings = Movie.all_ratings.sort #Change to what is in Movie.all
+
+    if update_uri
+      flash.keep
+      redirect_to movies_path(params)
+    end
 
   end
 
